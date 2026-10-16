@@ -1,0 +1,67 @@
+{
+  "run_name": "single_pad_easy_probe",
+  "difficulty": "single_pad_easy",
+  "episodes": 3000,
+  "seed": 42,
+  "global_step": 2385107,
+  "final_epsilon": 0.010000000000000009,
+  "best_eval_return_mean": 214.96227672602544,
+  "best_eval_success_rate": 0.4,
+  "max_eval_return_mean_observed": 330.69220991525356,
+  "max_eval_success_rate_observed": 0.4,
+  "dqn_config": {
+    "state_dim": 38,
+    "action_dim": 6,
+    "hidden_dims": [
+      256,
+      128,
+      64
+    ],
+    "learning_rate": 5e-05,
+    "gamma": 0.99,
+    "replay_capacity": 100000,
+    "batch_size": 64,
+    "min_replay_size": 10000,
+    "epsilon_start": 1.0,
+    "epsilon_end": 0.01,
+    "epsilon_decay_steps": 200000,
+    "target_update_freq": 250,
+    "grad_clip_norm": 1.0,
+    "use_double_dqn": true,
+    "reward_clip_value": 20.0,
+    "preserve_terminal_reward_scale": true,
+    "target_q_clip_value": 50.0,
+    "target_value_clip_value": 75.0,
+    "q_value_hard_limit": 1000.0,
+    "td_error_hard_limit": 1000.0,
+    "loss_hard_limit": 10000.0,
+    "device": "cpu"
+  },
+  "total_env_steps": 2385107,
+  "total_gradient_updates": 2375108,
+  "total_wall_time_sec": 2705.5195949077606,
+  "avg_env_steps_per_sec": 881.5707727599421,
+  "resume_info": {
+    "resume_path": null,
+    "applied": {
+      "reset_epsilon_on_resume": false,
+      "resume_epsilon_value": null,
+      "reset_optimizer_on_resume": false,
+      "reset_global_step_on_resume": false,
+      "reset_learn_step_on_resume": false
+    }
+  },
+  "max_abs_q_observed": 112.69095611572266,
+  "max_abs_td_error_observed": 4.850175857543945,
+  "max_loss_observed": 4.68094539642334,
+  "figure_files": [
+    "epsilon_decay.png",
+    "eval_return_mean.png",
+    "eval_success_rate.png",
+    "eval_touchdown_speed_mean.png",
+    "mean_q.png",
+    "training_loss.png",
+    "training_return.png"
+  ],
+  "final_recent_return_mean_20": 274.9077833530261
+}

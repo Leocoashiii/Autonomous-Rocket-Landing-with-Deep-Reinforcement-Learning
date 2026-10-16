@@ -1,0 +1,228 @@
+reward:
+  components:
+    - shaping_reward
+    - contact_reward
+    - fuel_penalty
+    - terminal_reward
+  shaping:
+    distance_weight: 18.0
+    vertical_distance_scale: 0.5
+    speed_weight: 4.0
+    horizontal_speed_weight: 3.0
+    downward_speed_weight: 6.0
+    angle_weight: 10.0
+    angular_velocity_weight: 2.5
+    hazard_weight: 3.0
+    slope_weight: 4.0
+    centered_bonus: 16.0
+    angle_penalty_small: 1.0
+    angle_penalty_large: 3.0
+    angle_threshold: 0.5
+    angular_velocity_extra_weight: 3.5
+    wrong_pad_hover_penalty: 1.0
+    near_ground_height: 2.5
+    near_ground_speed_weight: 6.0
+    near_ground_horizontal_speed_weight: 14.0
+    near_ground_horizontal_speed_safe: 0.35
+    near_ground_downward_speed_weight: 10.0
+    near_ground_safe_speed: 0.75
+    near_ground_angle_weight: 8.0
+    near_ground_angular_velocity_weight: 6.0
+    braking_zone_height: 6.0
+    braking_zone_vertical_speed: 1.5
+    main_engine_brake_bonus: 0.14
+    missed_brake_penalty: 0.14
+    target_zone_step_bonus: 0.06
+    low_speed_step_bonus: 0.10
+    low_speed_threshold: 1.0
+    upright_step_bonus: 0.06
+    upright_angle_threshold: 0.2
+    center_alignment_bonus: 0.08
+    near_ground_center_bonus: 0.10
+    controlled_descent_bonus: 0.10
+    controlled_descent_speed: 1.2
+    controlled_descent_horizontal_speed: 0.40
+    stable_descent_bonus: 0.18
+    stable_descent_height: 6.0
+    stable_descent_downward_speed_min: 0.15
+    stable_descent_downward_speed_max: 1.20
+    stable_descent_horizontal_speed: 0.45
+    stable_descent_angle: 0.12
+    stable_descent_angular_velocity: 0.60
+    lateral_drift_penalty: 0.12
+    lateral_drift_speed_threshold: 0.55
+    tilt_step_penalty: 0.12
+    tilt_angle_threshold: 0.18
+    spin_step_penalty: 0.10
+    spin_angular_velocity_threshold: 0.75
+    landing_window_step_bonus: 0.14
+    landing_window_height: 1.25
+    landing_window_speed: 0.65
+    landing_window_horizontal_speed: 0.20
+    landing_window_angle: 0.2
+    landing_window_angular_velocity: 1.0
+    settle_height: 1.0
+    settle_speed: 0.65
+    settle_horizontal_speed: 0.28
+    settle_downward_speed: 0.35
+    settle_angle: 0.24
+    settle_angular_velocity: 0.70
+    settle_step_bonus: 0.28
+    settle_center_bonus: 0.14
+    settle_engine_off_bonus: 0.06
+    post_contact_side_penalty: 0.14
+    post_contact_main_penalty: 0.04
+    post_contact_motion_penalty: 0.10
+    post_contact_spin_penalty: 0.08
+    post_contact_offcenter_penalty: 0.10
+    scale: 0.03
+    clip: 15.0
+  contact:
+    leg_contact_bonus: 8.0
+    scale: 0.03
+  fuel_penalty:
+    main_engine: 0.12
+    side_thruster: 0.04
+  terminal:
+    safe_target_landing: 220.0
+    safe_wrong_pad_landing: 60.0
+    wrong_pad_contact: -30.0
+    unsafe_target_contact: -55.0
+    out_of_bounds: -45.0
+    time_limit: -20.0
+    body_crash_or_other: -60.0
+    impact_speed_weight: 12.0
+    impact_speed_clip: 4.0
+    hard_landing_speed: 1.75
+    hard_landing_vertical_speed: 1.25
+    settle_steps_required: 5
+    settle_altitude_threshold: 1.0
+    settle_speed_threshold: 0.65
+    settle_horizontal_speed_threshold: 0.28
+    settle_downward_speed_threshold: 0.35
+    settle_angle_threshold: 0.24
+    settle_angular_velocity_threshold: 0.70
+    stall_steps_required: 25
+    stall_contact_margin: 0.75
+    stall_altitude_threshold: 1.0
+    stall_speed_threshold: 0.25
+    stall_horizontal_speed_threshold: 0.12
+    stall_downward_speed_threshold: 0.12
+    stall_angle_threshold: 0.35
+    stall_angular_velocity_threshold: 0.35
+
+dqn:
+  algorithm: dqn
+  supports_double_dqn: true
+  hidden_dims: [256, 128, 64]
+  stability:
+    reward_clip_value: 20.0
+    target_q_clip_value: 50.0
+    target_value_clip_value: 75.0
+    q_value_hard_limit: 1000.0
+    td_error_hard_limit: 1000.0
+    loss_hard_limit: 10000.0
+    validation:
+      trailing_window: 100
+      max_abs_q_mean: 250.0
+      max_abs_td_error_mean: 250.0
+      max_loss_mean: 500.0
+
+curriculum:
+  defaults:
+    stages:
+      - train_easy
+      - level1
+      - baseline
+    stage_episodes:
+      - 3000
+      - 2500
+      - 3500
+    stage_overrides:
+      - epsilon_decay_steps: 400000
+        eval_episodes: 50
+      - epsilon_decay_steps: 500000
+        eval_episodes: 50
+      - epsilon_decay_steps: 700000
+        eval_episodes: 100
+    transition:
+      reset_epsilon_on_resume: true
+      resume_epsilon_value: null
+      reset_optimizer_on_resume: false
+      reset_global_step_on_resume: false
+      reset_learn_step_on_resume: false
+
+env:
+  defaults:
+    render_mode: null
+    difficulty: baseline
+    world_width: 42.0
+    world_height: 28.0
+    min_pads: 3
+    max_pads: 5
+    max_encoded_pads: 5
+    pad_width_range: [1.2, 2.4]
+    pad_slope_range: [-0.02, 0.02]
+    pad_hazard_range: [0.0, 1.0]
+    min_pad_gap: 2.5
+    terrain_segments: 55
+    base_ground_y: 5.0
+    terrain_height_jitter: 6.0
+    water_level_offset: 2.0
+    pad_water_clearance: 1.0
+    max_episode_steps: 1000
+
+evaluation:
+  difficulty: baseline
+  episodes: 20
+  render_mode: null
+
+output:
+  root_dir: outputs
+  checkpoints_subdir: checkpoints
+  logs_subdir: logs
+  figures_subdir: figures
+  run_name_template: "dqn_single_{profile}_{difficulty}_seed{seed}_{timestamp}"
+
+reproducibility:
+  train_seed: 42
+  eval_seed_offset: 10000
+  torch_deterministic: false
+
+training_profiles:
+  gpu:
+    device: cuda
+    episodes: 2000
+    learning_rate: 1.0e-4
+    gamma: 0.99
+    batch_size: 256
+    replay_capacity: 200000
+    min_replay_size: 5000
+    epsilon_start: 1.0
+    epsilon_end: 0.01
+    epsilon_decay_steps: 100000
+    target_update_freq: 250
+    grad_clip_norm: 1.0
+    use_double_dqn: true
+    updates_per_step: 4
+    eval_every: 50
+    save_every: 100
+    log_every: 10
+  cpu:
+    device: cpu
+    episodes: 5000
+    learning_rate: 5.0e-5
+    gamma: 0.99
+    batch_size: 64
+    replay_capacity: 100000
+    min_replay_size: 10000
+    epsilon_start: 1.0
+    epsilon_end: 0.01
+    epsilon_decay_steps: 200000
+    target_update_freq: 250
+    grad_clip_norm: 1.0
+    use_double_dqn: true
+    updates_per_step: 1
+    eval_every: 100
+    save_every: 200
+    log_every: 20

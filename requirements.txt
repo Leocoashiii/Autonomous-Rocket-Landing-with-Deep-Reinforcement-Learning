@@ -1,0 +1,8 @@
+numpy
+torch
+gymnasium
+box2d-py
+pygame
+PyYAML
+pandas
+matplotlib
